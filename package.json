@@ -1,23 +1,92 @@
 {
-  "name": "chub_app",
-  "version": "0.1.0",
+  "name": "TeleCMI",
+  "version": "1.0.0",
   "private": true,
+  "author": "TeleCMI <info@telecmi.com>",
+  "main": "electron/start.js",
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/telecmi/desktop_app.git"
+  },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.20.0",
+    "bootstrap": "^4.5.2",
+    "electron-is-dev": "^1.2.0",
+    "electron-reload": "^1.5.0",
+    "jquery": "^3.5.1",
+    "jssip": "^3.5.7",
+    "moment": "^2.27.0",
+    "popper.js": "^1.16.1",
     "react": "^16.13.1",
+    "react-bootstrap": "^1.3.0",
+    "react-compound-timer": "^1.2.0",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.3"
+    "react-infinite-scroller": "^1.2.4",
+    "react-moment": "^0.9.7",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.3",
+    "react-toastify": "^6.0.8",
+    "socket.io-client": "^2.3.0",
+    "telecmi-live-agent": "^1.0.0",
+    "underscore": "^1.11.0"
   },
+  "build": {
+    "files": [
+      "build/**/*",
+      "build/images/*.png",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "build"
+    },
+    "appId": "com.telecmi.chub",
+    "productName": "TeleCMI",
+    "copyright": "Copyright © year TeleCMI",
+    "win": {
+      "target": "nsis",
+      "icon": "icons/icons/win/icon.ico"
+    },
+    "mac": {
+      "category": "app.telecmi.softphone",
+      "target": "dmg",
+      "icon": "icons/icons/mac/icon.icns"
+    },
+    "linux": {
+      "target": "deb",
+      "icon": "icons/icons/mac/icon.icns"
+    }
+  },
+  "homepage": "./",
   "scripts": {
-    "start": "react-scripts start",
+    "postinstall": "electron-builder install-app-deps",
+    "icon": "electron-icon-maker --input=public/images/icon.png --output=icons",
+    "electron": "cross-env NODE_ENV=dev nodemon --exec \"\"electron .\"\"",
+    "start": "cross-env BROWSER=none npm run react-start",
+    "react-start": "react-scripts start",
+    "build-electron": "mkdir build && mkdir build/src && cp -r electron/. build/electron",
+    "build-electron-win": "mkdir build/src && robocopy electron build/electron /S",
+    "pack": "electron-builder build --mac --win --linux -c.extraMetadata.main=build/electron/start.js --publish always",
+    "pack-win": "electron-builder build --win -c.extraMetadata.main=build/electron/start.js --publish always",
+    "pack-linux": "electron-builder build --linux --publish always -c.extraMetadata.main=build/electron/start.js ",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "watch": "npm-watch"
+
   },
   "eslintConfig": {
     "extends": "react-app"
+  },
+  "watch": {
+    "build": {
+      "patterns": [
+        "src"
+      ],
+      "extensions": "js,jsx"
+    }
   },
   "browserslist": {
     "production": [
@@ -30,5 +99,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "electron": "^10.1.2",
+    "electron-builder": "^22.8.1",
+    "electron-icon-maker": "0.0.5",
+    "nodemon": "^2.0.4",
+    "npm-watch": "^0.7.0"
   }
 }

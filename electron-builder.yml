@@ -1,0 +1,4 @@
+appId: app.telecmi.softphone
+publish:
+  provider: github
+  token: 71ca213577a9680a2449733c662c3917dc1eb9d9
