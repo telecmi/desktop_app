@@ -1,12 +1,12 @@
 {
   "name": "TeleCMI",
-  "version": "1.0.0",
+  "version": "1.0.4",
   "private": true,
   "author": "TeleCMI <info@telecmi.com>",
   "main": "electron/start.js",
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/telecmi/desktop_app.git"
+    "type": "git",
+    "url": "https://github.com/telecmi/desktop_app.git"
   },
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
@@ -16,6 +16,7 @@
     "bootstrap": "^4.5.2",
     "electron-is-dev": "^1.2.0",
     "electron-reload": "^1.5.0",
+    "electron-updater": "^4.3.5",
     "jquery": "^3.5.1",
     "jssip": "^3.5.7",
     "moment": "^2.27.0",
@@ -44,14 +45,14 @@
     },
     "appId": "com.telecmi.chub",
     "productName": "TeleCMI",
-    "copyright": "Copyright © year TeleCMI",
+    "copyright": "Copyright @ 2020 TeleCMI Technologies (P) Ltd",
     "win": {
       "target": "nsis",
       "icon": "icons/icons/win/icon.ico"
     },
     "mac": {
       "category": "app.telecmi.softphone",
-      "target": "dmg",
+      "target": ["zip","dmg"],
       "icon": "icons/icons/mac/icon.icns"
     },
     "linux": {
@@ -67,15 +68,17 @@
     "start": "cross-env BROWSER=none npm run react-start",
     "react-start": "react-scripts start",
     "build-electron": "mkdir build && mkdir build/src && cp -r electron/. build/electron",
+    "copy-electron": "cp -r electron/. build/electron",
     "build-electron-win": "mkdir build/src && robocopy electron build/electron /S",
-    "pack": "electron-builder build --mac --win --linux -c.extraMetadata.main=build/electron/start.js --publish always",
+    "pack": "electron-builder build --mac --win -c.extraMetadata.main=build/electron/start.js --publish always",
     "pack-win": "electron-builder build --win -c.extraMetadata.main=build/electron/start.js --publish always",
+    "pack-mac": "electron-builder build --mac -c.extraMetadata.main=build/electron/start.js --publish always",
     "pack-linux": "electron-builder build --linux --publish always -c.extraMetadata.main=build/electron/start.js ",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "publish":"electron-builder --publish always",
     "eject": "react-scripts eject",
     "watch": "npm-watch"
-
   },
   "eslintConfig": {
     "extends": "react-app"

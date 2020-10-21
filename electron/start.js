@@ -8,6 +8,7 @@ const url = require( 'url' );
 require( 'electron-reload' );
 const path = require( 'path' );
 const server = require( './server' );
+const { autoUpdater } = require( "electron-updater" );
 
 
 let opsys = process.platform;
@@ -28,7 +29,11 @@ function createWindow () {
 
     const ses = mainWindow.webContents.session
     mainWindow.on( 'focus', () => {
-        app.dock.setBadge( '' )
+
+        if ( opsys == "darwin" ) {
+            app.dock.setBadge( '' )
+        }
+
         mainWindow.flashFrame( false )
         mainWindow.webContents.send( "fromMain", { event: 'app', status: 'focus' } );
     } )
@@ -70,6 +75,28 @@ function createWindow () {
 } else if ( opsys == "linux" ) {
     opsys = "Linux";
 }*/
+
+autoUpdater.on( 'checking-for-update', () => {
+    mainWindow.webContents.send( 'message', 'checking' );
+} )
+autoUpdater.on( 'update-available', ( info ) => {
+    mainWindow.webContents.send( 'message', 'checking avilable' );
+} )
+autoUpdater.on( 'update-not-available', ( info ) => {
+    mainWindow.webContents.send( 'message', 'checking not avilable' );
+} )
+autoUpdater.on( 'error', ( err ) => {
+    mainWindow.webContents.send( 'message', 'checking error' );
+} )
+autoUpdater.on( 'download-progress', ( progressObj ) => {
+    let log_message = "Download speed: " + progressObj.bytesPerSecond;
+    log_message = log_message + ' - Downloaded ' + progressObj.percent + '%';
+    log_message = log_message + ' (' + progressObj.transferred + "/" + progressObj.total + ')';
+    mainWindow.webContents.send( 'message', log_message );
+} )
+autoUpdater.on( 'update-downloaded', ( info ) => {
+    mainWindow.webContents.send( 'message', 'download finished' );
+} );
 
 
 ipcMain.on( "setBadge", ( event, args ) => {
@@ -117,6 +144,10 @@ app.on( 'window-all-closed', () => {
         app.quit()
     }
 } )
+
+app.on( 'ready', function () {
+    //autoUpdater.checkForUpdatesAndNotify();
+} );
 
 app.on( 'activate', () => {
     if ( mainWindow === null ) {
